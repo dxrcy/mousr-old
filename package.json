@@ -5,17 +5,16 @@
   "description": "Move mouse cursor with keyboard",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "rebuild": "npm rebuild --runtime=electron --target=11.1.1 --disturl=https://atom.io/download/atom-shell --abi=72"
   },
   "keywords": [],
   "author": "darcy",
   "license": "ISC",
-  "dependencies": {
-    "fnct": "^1.1.24",
-    "iohook": "^0.9.3",
-    "robotjs": "^0.6.0"
-  },
   "devDependencies": {
     "electron": "^11.4.11"
+  },
+  "dependencies": {
+    "robotjs": "^0.6.0"
   }
 }

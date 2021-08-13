@@ -1,16 +1,16 @@
 const {app, BrowserWindow, ipcMain, Tray, Menu, globalShortcut, screen} = require("electron");
 const path = require("path");
-const {exec} = require("child_process");
+const robot = require("robotjs");
 
 var tray, isQuiting;
 app.on("before-quit", function () {
   tray.destroy();
   isQuiting = true;
 });
-var dist = 30;
+var dist = 40;
 var max = 300;
-var min = 1;
-var amount = 1.6;
+var min = 2;
+var amount = 1.4;
 var scroll = 1;
 var active = true;
 var doTray = true;
@@ -45,26 +45,12 @@ function createWindow() {
     tray.on("click", toggleActive);
   }
 
-  globalShortcut.register("Insert", toggleActive);
+  globalShortcut.register("F8", toggleActive);
   setShortcuts();
 }
 
 app.allowRendererProcessReuse = false;
 app.whenReady().then(createWindow);
-
-function execute(cmd) {
-  exec(cmd, (error, stdout, stderr) => {
-    if (error) {
-      console.log(`error: ${error.message}`);
-      return;
-    }
-    if (stderr) {
-      console.log(`stderr: ${stderr}`);
-      return;
-    }
-    console.log(`stdout: ${stdout}`);
-  });
-}
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -81,64 +67,89 @@ app.on("activate", () => {
 function setShortcuts() {
   globalShortcut.register("W", () => {
     if (active) {
-      execute(`node mouse.js move 0 ${- dist}`);
+      var mouse = robot.getMousePos();
+      robot.moveMouse(
+        mouse.x,
+        mouse.y - dist,
+      );
+      console.log(`Moved UP ${dist} pixels`);
     }
   });
   globalShortcut.register("A", () => {
     if (active) {
-      execute(`node mouse.js move ${- dist} 0`);
+      var mouse = robot.getMousePos();
+      robot.moveMouse(
+        mouse.x - dist,
+        mouse.y,
+      );
+      console.log(`Moved LEFT ${dist} pixels`);
     }
   });
   globalShortcut.register("S", () => {
     if (active) {
-      execute(`node mouse.js move 0 ${dist}`);
+      var mouse = robot.getMousePos();
+      robot.moveMouse(
+        mouse.x,
+        mouse.y + dist,
+      );
+      console.log(`Moved DOWN ${dist} pixels`);
     }
   });
   globalShortcut.register("D", () => {
     if (active) {
-      execute(`node mouse.js move ${dist} 0`);
+      var mouse = robot.getMousePos();
+      robot.moveMouse(
+        mouse.x + dist,
+        mouse.y,
+      );
+      console.log(`Moved RIGHT ${dist} pixels`);
     }
   });
   globalShortcut.register("E", () => {
     if (active) {
       dist *= amount;
+      setDist();
+      console.log(`Set distance to ${dist} pixels`);
     }
   });
   globalShortcut.register("Q", () => {
     if (active) {
       dist /= amount;
+      setDist();
+      console.log(`Set distance to ${dist} pixels`);
     }
   });
   globalShortcut.register("X", () => {
     if (active) {
-      execute(`node mouse.js click left`);
+      robot.mouseClick("left");
+      console.log("LEFT Clicked");
     }
   });
   globalShortcut.register("C", () => {
     if (active) {
-      execute(`node mouse.js click middle`);
+      robot.mouseClick("middle");
+      console.log("MIDDLE Clicked");
     }
   });
   globalShortcut.register("V", () => {
     if (active) {
-      execute(`node mouse.js click right`);
+      robot.mouseClick("right");
+      console.log("RIGHT Clicked");
     }
   });
   globalShortcut.register("R", () => {
     if (active) {
       console.warn("Scroll not implemented!")
-      // execute(`node mouse.js scroll ${- dist * scroll}`);
     }
   });
   globalShortcut.register("F", () => {
     if (active) {
       console.warn("Scroll not implemented!")
-      // execute(`node mouse.js scroll ${dist * scroll}`);
     }
   });
   globalShortcut.register("T", () => {
     if (active) {
-      execute(`node mouse.js test`);
+      test();
     }
   });
 }
@@ -159,10 +170,55 @@ function removeShortcuts() {
 }
 
 function warmup() {
-  execute(`node mouse.js warmup`);
+  /* Remove this? */
+  var mouse = robot.getMousePos();
 }
-function test() {
-  execute(`node mouse.js test`);
+async function test() {
+  console.log("Testing!");
+  var mouse = robot.getMousePos();
+  amount = 20;
+  time = 0.03;
+  mouse.y += amount * 1.5;
+  mouse.x += amount * 0.5;
+  robot.moveMouse(
+    mouse.x + amount * 0.5,
+    mouse.y - amount * 1.5,
+  );
+  await sleep(time);
+  robot.moveMouse(
+    mouse.x + amount * 1.5,
+    mouse.y - amount * 0.5,
+  );
+  await sleep(time);
+  robot.moveMouse(
+    mouse.x + amount * 1.5,
+    mouse.y + amount * 0.5,
+  );
+  await sleep(time);
+  robot.moveMouse(
+    mouse.x + amount * 0.5,
+    mouse.y + amount * 1.5,
+  );
+  await sleep(time);
+  robot.moveMouse(
+    mouse.x - amount * 0.5,
+    mouse.y + amount * 1.5,
+  );
+  await sleep(time);
+  robot.moveMouse(
+    mouse.x - amount * 1.5,
+    mouse.y + amount * 0.5,
+  );
+  await sleep(time);
+  robot.moveMouse(
+    mouse.x - amount * 1.5,
+    mouse.y - amount * 0.5,
+  );
+  await sleep(time);
+  robot.moveMouse(
+    mouse.x - amount * 0.5,
+    mouse.y - amount * 1.5,
+  );
 }
 function setDist() {
   dist = Math.round(Math.max(min, Math.min(max, dist)));
@@ -180,16 +236,8 @@ function toggleActive() {
   }
 }
 
-function execute(cmd) {
-  exec(cmd, (error, stdout, stderr) => {
-    if (error) {
-      console.log(`error: ${error.message}`);
-      return;
-    }
-    if (stderr) {
-      console.log(`stderr: ${stderr}`);
-      return;
-    }
-    console.log(`stdout: ${stdout}`);
+function sleep(time) {
+  return new Promise(resolve => {
+    setTimeout(resolve, time * 1000);
   });
 }
