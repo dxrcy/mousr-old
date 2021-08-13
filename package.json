@@ -1,6 +1,6 @@
 {
   "name": "mousr",
-  "product": "Mousr",
+  "productName": "Mousr",
   "version": "1.0.0",
   "description": "Move mouse cursor with keyboard",
   "main": "main.js",
@@ -8,7 +8,11 @@
     "start": "electron .",
     "rebuild": "npm rebuild --runtime=electron --target=11.1.1 --disturl=https://atom.io/download/atom-shell --abi=72"
   },
-  "keywords": [],
+  "keywords": [
+    "cursor",
+    "mouse",
+    "keyboard"
+  ],
   "author": "darcy",
   "license": "ISC",
   "devDependencies": {
