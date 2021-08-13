@@ -67,7 +67,7 @@ function setShortcuts() {
   globalShortcut.register(shortcuts["move.up"], () => {
     if (active) {
       var mouse = robot.getMousePos();
-      robot["moveMouse" + (settings.smoothMove ?"Smooth" : "")](
+      robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
         mouse.x,
         mouse.y - speed,
       );
@@ -77,7 +77,7 @@ function setShortcuts() {
   globalShortcut.register(shortcuts["move.left"], () => {
     if (active) {
       var mouse = robot.getMousePos();
-      robot["moveMouse" + (settings.smoothMove ?"Smooth" : "")](
+      robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
         mouse.x - speed,
         mouse.y,
       );
@@ -87,7 +87,7 @@ function setShortcuts() {
   globalShortcut.register(shortcuts["move.down"], () => {
     if (active) {
       var mouse = robot.getMousePos();
-      robot["moveMouse" + (settings.smoothMove ?"Smooth" : "")](
+      robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
         mouse.x,
         mouse.y + speed,
       );
@@ -97,7 +97,7 @@ function setShortcuts() {
   globalShortcut.register(shortcuts["move.right"], () => {
     if (active) {
       var mouse = robot.getMousePos();
-      robot["moveMouse" + (settings.smoothMove ?"Smooth" : "")](
+      robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
         mouse.x + speed,
         mouse.y,
       );
@@ -184,55 +184,22 @@ function removeShortcuts() {
   globalShortcut.unregister(shortcuts["test"]);
 }
 
-function warmup() {
-  /* Remove this? */
-  // var mouse = robot.getMousePos();
-}
 async function test() {
   console.log("Testing!");
-  var mouse = robot.getMousePos();
-  amount = settings["test.size"];
-  time = settings["test.time"] / 8;
-  mouse.y += amount * 1.5;
-  mouse.x += amount * 0.5;
+  mouse = robot.getMousePos();
+  size = settings["test.size"];
+  amount = settings["test.amount"];
+  time = settings["test.time"] / 10 / amount;
+  for (i = 0; i < amount; i++) {
+    robot.moveMouse(
+      mouse.x - Math.sin((i / amount) * Math.PI * 2) * size,
+      mouse.y - Math.cos((i / amount) * Math.PI * 2) * size + size,
+    );
+    await sleep(time);
+  }
   robot.moveMouse(
-    mouse.x + amount * 0.5,
-    mouse.y - amount * 1.5,
-  );
-  await sleep(time);
-  robot.moveMouse(
-    mouse.x + amount * 1.5,
-    mouse.y - amount * 0.5,
-  );
-  await sleep(time);
-  robot.moveMouse(
-    mouse.x + amount * 1.5,
-    mouse.y + amount * 0.5,
-  );
-  await sleep(time);
-  robot.moveMouse(
-    mouse.x + amount * 0.5,
-    mouse.y + amount * 1.5,
-  );
-  await sleep(time);
-  robot.moveMouse(
-    mouse.x - amount * 0.5,
-    mouse.y + amount * 1.5,
-  );
-  await sleep(time);
-  robot.moveMouse(
-    mouse.x - amount * 1.5,
-    mouse.y + amount * 0.5,
-  );
-  await sleep(time);
-  robot.moveMouse(
-    mouse.x - amount * 1.5,
-    mouse.y - amount * 0.5,
-  );
-  await sleep(time);
-  robot.moveMouse(
-    mouse.x - amount * 0.5,
-    mouse.y - amount * 1.5,
+    mouse.x,
+    mouse.y,
   );
 }
 function setSpeed() {

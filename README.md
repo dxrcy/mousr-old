@@ -17,6 +17,7 @@ Move mouse cursor with keyboard
 
 - [ ] Toggleable mouse
 - [ ] Fix icon for low resolution
+- [ ] Prevent multiple instances
 <details>
 <summary>
 Fixed

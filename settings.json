@@ -6,6 +6,7 @@
   "speed.change": 1.4,
   "speed.scroll": 1,
   "startActive": true,
-  "test.size": 30,
-  "test.time": 0.5
+  "test.size": 40,
+  "test.amount": 20,
+  "test.time": 0
 }
