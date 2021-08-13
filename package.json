@@ -1,0 +1,21 @@
+{
+  "name": "mousr",
+  "product": "Mousr",
+  "version": "1.0.0",
+  "description": "Move mouse cursor with keyboard",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "darcy",
+  "license": "ISC",
+  "dependencies": {
+    "fnct": "^1.1.24",
+    "iohook": "^0.9.3",
+    "robotjs": "^0.6.0"
+  },
+  "devDependencies": {
+    "electron": "^11.4.11"
+  }
+}
