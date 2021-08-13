@@ -1,0 +1,11 @@
+{
+  "smoothMove": false,
+  "speed.default": 40,
+  "speed.min": 2,
+  "speed.max": 300,
+  "speed.change": 1.4,
+  "speed.scroll": 1,
+  "startActive": true,
+  "test.size": 30,
+  "test.time": 0.5
+}

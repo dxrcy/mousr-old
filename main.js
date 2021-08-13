@@ -1,4 +1,5 @@
 const {app, BrowserWindow, ipcMain, Tray, Menu, globalShortcut, screen} = require("electron");
+const fs = require("fs");
 const path = require("path");
 const robot = require("robotjs");
 
@@ -7,36 +8,32 @@ app.on("before-quit", function () {
   tray.destroy();
   isQuiting = true;
 });
-var dist = 40;
-var max = 300;
-var min = 2;
-var amount = 1.4;
-var scroll = 1;
-var active = true;
+var settings = JSON.parse(fs.readFileSync(path.join(__dirname, "settings.json")));
+var shortcuts = JSON.parse(fs.readFileSync(path.join(__dirname, "shortcuts.json")));
+var speed = settings["speed.default"];
+var active = settings.startActive;
 var doTray = true;
 // doTray = false;
+
+labels = ["👍 Activate", "👎 Deativate"];
+template = [
+  {
+    label: active ? labels[1] : labels[0], click: function () {
+      toggleActive();
+    }
+  },
+  {
+    label: "❌ Quit", click: function () {
+      isQuiting = true;
+      app.quit();
+    }
+  }
+];
 
 function createWindow() {
   warmup();
   if (doTray) {
-    tray = new Tray(path.join(__dirname, "icon-active.png"));
-
-    labels = ["👍 Activate", "👎 Deativate"];
-    template = [
-      {
-        label: labels[1], click: function () {
-          toggleActive();
-          template[0].label = active ? labels[1] : labels[0];
-          tray.setContextMenu(Menu.buildFromTemplate(template));
-        }
-      },
-      {
-        label: "❌ Quit", click: function () {
-          isQuiting = true;
-          app.quit();
-        }
-      }
-    ];
+    tray = new Tray(path.join(__dirname, active ? "image/icon-active.png" : "image/icon.png"));
     tray.setContextMenu(Menu.buildFromTemplate(template));
     tray.setToolTip("Mousr");
   }
@@ -45,7 +42,7 @@ function createWindow() {
     tray.on("click", toggleActive);
   }
 
-  globalShortcut.register("Alt+Insert", toggleActive);
+  globalShortcut.register(shortcuts["activate"], toggleActive);
   setShortcuts();
 
   console.log("Mousr Started");
@@ -67,89 +64,103 @@ app.on("activate", () => {
 });
 
 function setShortcuts() {
-  globalShortcut.register("W", () => {
+  globalShortcut.register(shortcuts["move.up"], () => {
     if (active) {
       var mouse = robot.getMousePos();
-      robot.moveMouse(
+      robot["moveMouse" + (settings.smoothMove ?"Smooth" : "")](
         mouse.x,
-        mouse.y - dist,
+        mouse.y - speed,
       );
-      console.log(`Moved UP ${dist} pixels`);
+      console.log(`Moved UP ${speed} pixels`);
     }
   });
-  globalShortcut.register("A", () => {
+  globalShortcut.register(shortcuts["move.left"], () => {
     if (active) {
       var mouse = robot.getMousePos();
-      robot.moveMouse(
-        mouse.x - dist,
+      robot["moveMouse" + (settings.smoothMove ?"Smooth" : "")](
+        mouse.x - speed,
         mouse.y,
       );
-      console.log(`Moved LEFT ${dist} pixels`);
+      console.log(`Moved LEFT ${speed} pixels`);
     }
   });
-  globalShortcut.register("S", () => {
+  globalShortcut.register(shortcuts["move.down"], () => {
     if (active) {
       var mouse = robot.getMousePos();
-      robot.moveMouse(
+      robot["moveMouse" + (settings.smoothMove ?"Smooth" : "")](
         mouse.x,
-        mouse.y + dist,
+        mouse.y + speed,
       );
-      console.log(`Moved DOWN ${dist} pixels`);
+      console.log(`Moved DOWN ${speed} pixels`);
     }
   });
-  globalShortcut.register("D", () => {
+  globalShortcut.register(shortcuts["move.right"], () => {
     if (active) {
       var mouse = robot.getMousePos();
-      robot.moveMouse(
-        mouse.x + dist,
+      robot["moveMouse" + (settings.smoothMove ?"Smooth" : "")](
+        mouse.x + speed,
         mouse.y,
       );
-      console.log(`Moved RIGHT ${dist} pixels`);
+      console.log(`Moved RIGHT ${speed} pixels`);
     }
   });
-  globalShortcut.register("E", () => {
+  globalShortcut.register(shortcuts["speed.increase"], () => {
     if (active) {
-      dist *= amount;
-      setDist();
-      console.log(`Set distance to ${dist} pixels`);
+      speed *= settings["speed.change"];
+      setSpeed();
+      console.log(`Set speed to ${speed} pixels`);
     }
   });
-  globalShortcut.register("Q", () => {
+  globalShortcut.register(shortcuts["speed.decrease"], () => {
     if (active) {
-      dist /= amount;
-      setDist();
-      console.log(`Set distance to ${dist} pixels`);
+      speed /= settings["speed.change"];
+      setSpeed();
+      console.log(`Set speed to ${speed} pixels`);
     }
   });
-  globalShortcut.register("X", () => {
+  globalShortcut.register(shortcuts["click.left"], () => {
     if (active) {
       robot.mouseClick("left");
       console.log("LEFT Clicked");
     }
   });
-  globalShortcut.register("C", () => {
+  globalShortcut.register(shortcuts["click.middle"], () => {
     if (active) {
       robot.mouseClick("middle");
       console.log("MIDDLE Clicked");
     }
   });
-  globalShortcut.register("V", () => {
+  globalShortcut.register(shortcuts["click.right"], () => {
     if (active) {
       robot.mouseClick("right");
       console.log("RIGHT Clicked");
     }
   });
-  globalShortcut.register("R", () => {
+  globalShortcut.register(shortcuts["scroll.up"], () => {
     if (active) {
-      console.warn("Scroll not implemented!")
+      robot.scrollMouse(0, speed * settings["speed.scroll"]);
+      console.log(`Scrolled UP ${speed * settings["speed.scroll"]}`);
     }
   });
-  globalShortcut.register("F", () => {
+  globalShortcut.register(shortcuts["scroll.left"], () => {
     if (active) {
-      console.warn("Scroll not implemented!")
+      robot.scrollMouse(true, speed * settings["speed.scroll"]);
+      console.log(`Scrolled LEFT ${speed * settings["speed.scroll"]}`);
     }
   });
-  globalShortcut.register("T", () => {
+  globalShortcut.register(shortcuts["scroll.down"], () => {
+    if (active) {
+      robot.scrollMouse(0, - speed * settings["speed.scroll"]);
+      console.log(`Scrolled DOWN ${speed * settings["speed.scroll"]}`);
+    }
+  });
+  globalShortcut.register(shortcuts["scroll.right"], () => {
+    if (active) {
+      robot.scrollMouse(true, - speed * settings["speed.scroll"]);
+      console.log(`Scrolled RIGHT ${speed * settings["speed.scroll"]}`);
+    }
+  });
+  globalShortcut.register(shortcuts["test"], () => {
     if (active) {
       test();
     }
@@ -157,29 +168,31 @@ function setShortcuts() {
 }
 
 function removeShortcuts() {
-  globalShortcut.unregister("W");
-  globalShortcut.unregister("A");
-  globalShortcut.unregister("S");
-  globalShortcut.unregister("D");
-  globalShortcut.unregister("E");
-  globalShortcut.unregister("Q");
-  globalShortcut.unregister("X");
-  globalShortcut.unregister("C");
-  globalShortcut.unregister("V");
-  globalShortcut.unregister("R");
-  globalShortcut.unregister("F");
-  globalShortcut.unregister("T");
+  globalShortcut.unregister(shortcuts["move.up"]);
+  globalShortcut.unregister(shortcuts["move.left"]);
+  globalShortcut.unregister(shortcuts["move.down"]);
+  globalShortcut.unregister(shortcuts["move.right"]);
+  globalShortcut.unregister(shortcuts["click.left"]);
+  globalShortcut.unregister(shortcuts["click.middle"]);
+  globalShortcut.unregister(shortcuts["click.right"]);
+  globalShortcut.unregister(shortcuts["speed.decrease"]);
+  globalShortcut.unregister(shortcuts["speed.increase"]);
+  globalShortcut.unregister(shortcuts["scroll.up"]);
+  globalShortcut.unregister(shortcuts["scroll.left"]);
+  globalShortcut.unregister(shortcuts["scroll.down"]);
+  globalShortcut.unregister(shortcuts["scroll.right"]);
+  globalShortcut.unregister(shortcuts["test"]);
 }
 
 function warmup() {
   /* Remove this? */
-  var mouse = robot.getMousePos();
+  // var mouse = robot.getMousePos();
 }
 async function test() {
   console.log("Testing!");
   var mouse = robot.getMousePos();
-  amount = 20;
-  time = 0.03;
+  amount = settings["test.size"];
+  time = settings["test.time"] / 8;
   mouse.y += amount * 1.5;
   mouse.x += amount * 0.5;
   robot.moveMouse(
@@ -222,20 +235,23 @@ async function test() {
     mouse.y - amount * 1.5,
   );
 }
-function setDist() {
-  dist = Math.round(Math.max(min, Math.min(max, dist)));
+function setSpeed() {
+  speed = Math.round(Math.max(settings["speed.min"], Math.min(settings["speed.max"], speed)));
 }
 function toggleActive() {
   active = !active;
   if (active) {
     setShortcuts();
-    tray.setImage(path.join(__dirname, "icon-active.png"));
+    tray.setImage(path.join(__dirname, "image/icon-active.png"));
+    template[0].label = labels[1];
     console.log("Activated");
   } else {
     removeShortcuts();
-    tray.setImage(path.join(__dirname, "icon.png"));
+    tray.setImage(path.join(__dirname, "image/icon.png"));
+    template[0].label = labels[0];
     console.log("Dectivated");
   }
+  tray.setContextMenu(Menu.buildFromTemplate(template));
 }
 
 function sleep(time) {

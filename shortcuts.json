@@ -1,0 +1,17 @@
+{
+  "activate": "Alt+Insert",
+  "move.up": "W",
+  "move.left": "A",
+  "move.down": "S",
+  "move.right": "D",
+  "click.left": "Q",
+  "click.middle": "Z",
+  "click.right": "E",
+  "speed.decrease": "X",
+  "speed.increase": "C",
+  "scroll.up": "R",
+  "scroll.left": "Shift+R",
+  "scroll.down": "F",
+  "scroll.right": "Shift+F",
+  "test": "T"
+}
