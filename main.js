@@ -31,7 +31,6 @@ template = [
 ];
 
 function createWindow() {
-  warmup();
   if (doTray) {
     tray = new Tray(path.join(__dirname, active ? "image/icon-active.png" : "image/icon.png"));
     tray.setContextMenu(Menu.buildFromTemplate(template));
