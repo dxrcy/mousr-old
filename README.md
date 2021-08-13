@@ -18,4 +18,10 @@ Move mouse cursor with keyboard
 - Change keybinds
 - Add Shortcuts JSON file
 
+## Fixes
+
+- Change tray menu dynamically when activated state updates
+
+<img src="icon.png" type="image/png">
+
 ### Created by [darcy](https://github.com/darccyy)
