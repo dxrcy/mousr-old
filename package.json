@@ -20,5 +20,10 @@
   },
   "dependencies": {
     "robotjs": "^0.6.0"
+  },
+  "build": {
+    "win": {
+      "icon": "image/icon.png"
+    }
   }
 }
