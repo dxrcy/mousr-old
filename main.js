@@ -26,7 +26,7 @@ function createWindow() {
       {
         label: labels[1], click: function () {
           toggleActive();
-          template[0].label = template[0].label == labels[0] ? labels[1] : labels[0];
+          template[0].label = active ? labels[1] : labels[0];
           tray.setContextMenu(Menu.buildFromTemplate(template));
         }
       },
@@ -45,8 +45,10 @@ function createWindow() {
     tray.on("click", toggleActive);
   }
 
-  globalShortcut.register("F8", toggleActive);
+  globalShortcut.register("Alt+Insert", toggleActive);
   setShortcuts();
+
+  console.log("Mousr Started");
 }
 
 app.allowRendererProcessReuse = false;

@@ -9,12 +9,13 @@ Move mouse cursor with keyboard
 - Use `WASD` to move cursor
 - Use `X`, `C`, and `V` to Left, Middle, and Right click respectively
 - Use `Q` and `E` to change cursor movement speed
-- Use `F8` to activate / deactivate (You should see icon in the tray in the taskbar)
+- Use `Alt + Insert` to activate / deactivate (You should see icon in the tray in the taskbar)
 
 # To Do
 
 - Scroll
 - Togglable mouse
 - Change keybinds
+- Add Shortcuts JSON file
 
 ### Created by [darcy](https://github.com/darccyy)
