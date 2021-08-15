@@ -1,6 +1,6 @@
 # Mousr
 
-`/ˈmaʊsɚ̆/`
+`/ˈmaʊsɜ˞̆ɹ̩/`
 
 Move mouse cursor with keyboard
 
