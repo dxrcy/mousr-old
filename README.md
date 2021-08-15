@@ -36,6 +36,7 @@ Fixed
 - [x] Add Shortcuts JSON file
 - [x] Change tray menu dynamically when activated state updates
 - [x] Change scroll keys (TFGH), Move Test key (PrintScreen)
+- [x] Added smooth move toggle
 
 </details>
 
