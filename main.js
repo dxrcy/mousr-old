@@ -114,6 +114,46 @@ function setShortcuts() {
       console.log(`Moved RIGHT ${speed} pixels`);
     }
   });
+  globalShortcut.register(shortcuts["move.slow.up"], () => {
+    if (active) {
+      var mouse = robot.getMousePos();
+      robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
+        mouse.x,
+        mouse.y - speed * settings["speed.slow"],
+      );
+      console.log(`Moved UP slowly ${speed * settings["speed.slow"]} pixels`);
+    }
+  });
+  globalShortcut.register(shortcuts["move.slow.left"], () => {
+    if (active) {
+      var mouse = robot.getMousePos();
+      robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
+        mouse.x - speed * settings["speed.slow"],
+        mouse.y,
+      );
+      console.log(`Moved LEFT slowly ${speed * settings["speed.slow"]} pixels`);
+    }
+  });
+  globalShortcut.register(shortcuts["move.slow.down"], () => {
+    if (active) {
+      var mouse = robot.getMousePos();
+      robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
+        mouse.x,
+        mouse.y + speed * settings["speed.slow"],
+      );
+      console.log(`Moved DOWN slowly ${speed * settings["speed.slow"]} pixels`);
+    }
+  });
+  globalShortcut.register(shortcuts["move.slow.right"], () => {
+    if (active) {
+      var mouse = robot.getMousePos();
+      robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
+        mouse.x + speed * settings["speed.slow"],
+        mouse.y,
+      );
+      console.log(`Moved RIGHT slowly ${speed * settings["speed.slow"]} pixels`);
+    }
+  });
   globalShortcut.register(shortcuts["speed.increase"], () => {
     if (active) {
       speed *= settings["speed.change"];
@@ -146,7 +186,7 @@ function setShortcuts() {
       console.log("LEFT Clicked");
     }
   });
-  globalShortcut.register(shortcuts["toggle.left"], () => {
+  globalShortcut.register(shortcuts["click.toggle.left"], () => {
     if (active) {
       if (mouseDown.left) {
         robot.mouseToggle("up", "left");
@@ -167,7 +207,7 @@ function setShortcuts() {
       console.log("MIDDLE Clicked");
     }
   });
-  globalShortcut.register(shortcuts["toggle.middle"], () => {
+  globalShortcut.register(shortcuts["click.toggle.middle"], () => {
     if (active) {
       if (mouseDown.middle) {
         robot.mouseToggle("up", "middle");
@@ -188,7 +228,7 @@ function setShortcuts() {
       console.log("RIGHT Clicked");
     }
   });
-  globalShortcut.register(shortcuts["toggle.right"], () => {
+  globalShortcut.register(shortcuts["click.toggle.right"], () => {
     if (active) {
       if (mouseDown.right) {
         robot.mouseToggle("up", "right");
@@ -239,11 +279,11 @@ function removeShortcuts() {
   globalShortcut.unregister(shortcuts["move.down"]);
   globalShortcut.unregister(shortcuts["move.right"]);
   globalShortcut.unregister(shortcuts["click.left"]);
-  globalShortcut.unregister(shortcuts["toggle.left"]);
+  globalShortcut.unregister(shortcuts["click.toggle.left"]);
   globalShortcut.unregister(shortcuts["click.middle"]);
-  globalShortcut.unregister(shortcuts["toggle.middle"]);
+  globalShortcut.unregister(shortcuts["click.toggle.middle"]);
   globalShortcut.unregister(shortcuts["click.right"]);
-  globalShortcut.unregister(shortcuts["toggle.right"]);
+  globalShortcut.unregister(shortcuts["click.toggle.right"]);
   globalShortcut.unregister(shortcuts["speed.decrease"]);
   globalShortcut.unregister(shortcuts["speed.increase"]);
   globalShortcut.unregister(shortcuts["speed.reset"]);

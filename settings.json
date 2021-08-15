@@ -5,6 +5,7 @@
   "speed.max": 300,
   "speed.change": 1.4,
   "speed.scroll": 1,
+  "speed.slow": 0.2,
   "startActive": true,
   "test.size": 40,
   "test.amount": 20,

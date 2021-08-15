@@ -10,17 +10,28 @@ Issues, Bugs and Missing Features are very likely to occur, so please submit the
 
 # How to use
 
-- Download and Run latest release from [HERE](https://github.com/darccyy/mousr/releases/tag/v1.1.0)
+## Installation
+
+- Download the latest release from [HERE](https://github.com/darccyy/mousr/releases/tag/v1.1.0)
+- Run the executable file
+- Press 'More info' and then 'Run anyway'
+- Wait for it to install
+- It should open automatically
+- To open anytime, just search 'Mousr' in search bar, or click shortcut icon
+
+## Controls
+
 - Use `PrintScreen` to test if program is working (Cursor should spin in circle) but DO NOT HOLD IT DOWN! Unless you want lag and cringe :)
 - Use `WASD` to move cursor (Up, Left, Down, Right)
+- - Hold `Shift` while using these to go slower (Relative to set speed)
 - Use `Q`, `E`, and `Z` to Left, Middle, and Right click respectively
-- Use `Shift + Q`, `Shift + E`, and `Shift + Z` to hold button Left, Middle, and Right click respectively. Press again to unclick
+- - Press `Shift` while using these to hold button instead of clicking. Press again (with `Shift`) to unclick
 - Use `X` and `C` to change cursor movement and scroll speed
 - Use `V` to reset speed
-- Use `Shift+V` to toggle smooth mouse movement
+- - Use `Shift+V` to toggle smooth mouse movement
 - Use `TFGH` to scroll (Up, Left, Down, Right)
 - Use `Alt + Insert` to activate / deactivate (You should see icon change in the taskbar tray)
-- Use `Ctrl + Alt + Insert` terminate and close program (Only when activated)
+- - Use `Ctrl + Alt + Insert` terminate and close program (Only when activated)
 
 # To Do
 
@@ -31,6 +42,7 @@ Issues, Bugs and Missing Features are very likely to occur, so please submit the
 Fixed
 </summary>
 
+- [x] Add Shift + WASD for easy slow mouse movements
 - [x] Prevent multiple instances
 - [x] Add Ctrl + Alt + Insert to terminate program
 - [x] Stop test mode being ran multiple times
