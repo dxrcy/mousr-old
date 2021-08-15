@@ -12,7 +12,7 @@ Powered by [RobotJS](https://github.com/octalmage/robotjs/)
 - Use `PrintScreen` to test if program is working (Cursor should spin in circle) but DO NOT HOLD IT DOWN! Unless you want lag and cringe :)
 - Use `WASD` to move cursor (Up, Left, Down, Right)
 - Use `Q`, `E`, and `Z` to Left, Middle, and Right click respectively
-- Use `Shift+Q`, `Shift+E`, and `Shift+Z` to hold button Left, Middle, and Right click respectively. Press again to unclick
+- Use `Shift + Q`, `Shift + E`, and `Shift + Z` to hold button Left, Middle, and Right click respectively. Press again to unclick
 - Use `X` and `C` to change cursor movement speed
 - Use `TFGH` to scroll (Up, Left, Down, Right)
 - Use `Alt + Insert` to activate / deactivate (You should see icon change in the taskbar tray)
