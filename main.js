@@ -12,6 +12,7 @@ var settings = JSON.parse(fs.readFileSync(path.join(__dirname, "settings.json"))
 var shortcuts = JSON.parse(fs.readFileSync(path.join(__dirname, "shortcuts.json")));
 var speed = settings["speed.default"];
 var active = settings.startActive;
+var mouseDown = {};
 var doTray = true;
 // doTray = false;
 
@@ -123,16 +124,55 @@ function setShortcuts() {
       console.log("LEFT Clicked");
     }
   });
+  globalShortcut.register(shortcuts["toggle.left"], () => {
+    if (active) {
+      if (mouseDown.left) {
+        robot.mouseToggle("up", "left");
+        mouseDown.left = false;
+        console.log("LEFT Up");
+      } else {
+        robot.mouseToggle("down", "left");
+        mouseDown.left = true;
+        console.log("LEFT Down");
+      }
+    }
+  });
   globalShortcut.register(shortcuts["click.middle"], () => {
     if (active) {
       robot.mouseClick("middle");
       console.log("MIDDLE Clicked");
     }
   });
+  globalShortcut.register(shortcuts["toggle.middle"], () => {
+    if (active) {
+      if (mouseDown.middle) {
+        robot.mouseToggle("up", "middle");
+        mouseDown.middle = false;
+        console.log("MIDDLE Up");
+      } else {
+        robot.mouseToggle("down", "middle");
+        mouseDown.middle = true;X
+        console.log("MIDDLE Down");
+      }
+    }
+  });
   globalShortcut.register(shortcuts["click.right"], () => {
     if (active) {
       robot.mouseClick("right");
       console.log("RIGHT Clicked");
+    }
+  });
+  globalShortcut.register(shortcuts["toggle.right"], () => {
+    if (active) {
+      if (mouseDown.right) {
+        robot.mouseToggle("up", "right");
+        mouseDown.right = false;
+        console.log("RIGHT Up");
+      } else {
+        robot.mouseToggle("down", "right");
+        mouseDown.right = true;
+        console.log("RIGHT Down");
+      }
     }
   });
   globalShortcut.register(shortcuts["scroll.up"], () => {

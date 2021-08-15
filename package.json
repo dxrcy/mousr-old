@@ -11,7 +11,8 @@
   "keywords": [
     "cursor",
     "mouse",
-    "keyboard"
+    "keyboard",
+    "mouser"
   ],
   "author": "darcy",
   "license": "ISC",
@@ -19,11 +20,22 @@
     "electron": "^11.4.11"
   },
   "dependencies": {
+    "iohook": "^0.9.3",
     "robotjs": "^0.6.0"
   },
   "build": {
     "win": {
       "icon": "image/icon.png"
     }
+  },
+  "iohook": {
+    "targets": [
+      {
+        "target": "electron",
+        "abi": "85",
+        "platform": "win32",
+        "arch": "ia32"
+      }
+    ]
   }
 }

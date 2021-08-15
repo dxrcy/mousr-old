@@ -18,6 +18,7 @@ Move mouse cursor with keyboard
 - [ ] Toggleable mouse
 - [ ] Fix icon for low resolution
 - [ ] Prevent multiple instances
+- [ ] Switch from Electron Shortcuts to ioHook? 
 <details>
 <summary>
 Fixed
@@ -29,6 +30,14 @@ Fixed
 - [x] Change tray menu dynamically when activated state updates
 
 </details>
+
+# Problems
+
+- Add Shift+Q for toggle LeftClick
+
+- Cannot install ioHook
+- - Install Visual Studio C++
+- - Downgrade Electron
 
 # Contributing
 
