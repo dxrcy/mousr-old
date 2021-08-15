@@ -118,6 +118,16 @@ function setShortcuts() {
       console.log(`Set speed to ${speed} pixels`);
     }
   });
+  globalShortcut.register(shortcuts["speed.reset"], () => {
+    if (active) {
+      resetSpeed();
+    }
+  });
+  globalShortcut.register(shortcuts["speed.smooth"], () => {
+    if (active) {
+      toggleSmooth();
+    }
+  });
   globalShortcut.register(shortcuts["click.left"], () => {
     if (active) {
       robot.mouseToggle("up", "left");
@@ -210,11 +220,6 @@ function setShortcuts() {
       test();
     }
   });
-  globalShortcut.register(shortcuts["smooth"], () => {
-    if (active) {
-      toggleSmooth();
-    }
-  });
 }
 
 function removeShortcuts() {
@@ -223,16 +228,20 @@ function removeShortcuts() {
   globalShortcut.unregister(shortcuts["move.down"]);
   globalShortcut.unregister(shortcuts["move.right"]);
   globalShortcut.unregister(shortcuts["click.left"]);
+  globalShortcut.unregister(shortcuts["toggle.left"]);
   globalShortcut.unregister(shortcuts["click.middle"]);
+  globalShortcut.unregister(shortcuts["toggle.middle"]);
   globalShortcut.unregister(shortcuts["click.right"]);
+  globalShortcut.unregister(shortcuts["toggle.right"]);
   globalShortcut.unregister(shortcuts["speed.decrease"]);
   globalShortcut.unregister(shortcuts["speed.increase"]);
+  globalShortcut.unregister(shortcuts["speed.reset"]);
+  globalShortcut.unregister(shortcuts["speed.smooth"]);
   globalShortcut.unregister(shortcuts["scroll.up"]);
   globalShortcut.unregister(shortcuts["scroll.left"]);
   globalShortcut.unregister(shortcuts["scroll.down"]);
   globalShortcut.unregister(shortcuts["scroll.right"]);
   globalShortcut.unregister(shortcuts["test"]);
-  globalShortcut.unregister(shortcuts["smooth"]);
 }
 
 async function test() {
@@ -255,6 +264,10 @@ async function test() {
 }
 function setSpeed() {
   speed = Math.round(Math.max(settings["speed.min"], Math.min(settings["speed.max"], speed)));
+}
+function resetSpeed() {
+  speed = settings["speed.default"];
+  console.log("Speed RESET");
 }
 function toggleActive() {
   active = !active;

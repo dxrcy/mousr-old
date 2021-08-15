@@ -12,10 +12,11 @@
   "toggle.right": "Shift+E",
   "speed.decrease": "X",
   "speed.increase": "C",
+  "speed.reset": "V",
+  "speed.smooth": "Shift+V",
   "scroll.up": "T",
   "scroll.left": "F",
   "scroll.down": "G",
   "scroll.right": "H",
-  "test": "PrintScreen",
-  "smooth": "V"
+  "test": "PrintScreen"
 }
