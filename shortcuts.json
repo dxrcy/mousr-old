@@ -1,5 +1,6 @@
 {
   "activate": "Alt+Insert",
+  "terminate": "Ctrl+Alt+Insert",
   "move.up": "W",
   "move.left": "A",
   "move.down": "S",

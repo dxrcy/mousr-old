@@ -65,6 +65,11 @@ app.on("activate", () => {
 });
 
 function setShortcuts() {
+  globalShortcut.register(shortcuts["terminate"], () => {
+    if (active) {
+      app.quit();
+    }
+  });
   globalShortcut.register(shortcuts["move.up"], () => {
     if (active) {
       var mouse = robot.getMousePos();
@@ -224,6 +229,7 @@ function setShortcuts() {
 }
 
 function removeShortcuts() {
+  globalShortcut.unregister(shortcuts["terminate"]);
   globalShortcut.unregister(shortcuts["move.up"]);
   globalShortcut.unregister(shortcuts["move.left"]);
   globalShortcut.unregister(shortcuts["move.down"]);

@@ -20,6 +20,7 @@ Issues, Bugs and Missing Features are very likely to occur, so please submit the
 - Use `Shift+V` to toggle smooth mouse movement
 - Use `TFGH` to scroll (Up, Left, Down, Right)
 - Use `Alt + Insert` to activate / deactivate (You should see icon change in the taskbar tray)
+- Use `Ctrl + Alt + Insert` terminate and close program (Only when activated)
 
 # To Do
 
@@ -31,6 +32,7 @@ Issues, Bugs and Missing Features are very likely to occur, so please submit the
 Fixed
 </summary>
 
+- [x] Add Ctrl + Alt + Insert to terminate program
 - [x] Stop test mode being ran multiple times
 - [x] Press V for resetting speed
 - [x] Added smooth move toggle
