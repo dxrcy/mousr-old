@@ -13,6 +13,7 @@ var shortcuts = JSON.parse(fs.readFileSync(path.join(__dirname, "shortcuts.json"
 var speed = settings["speed.default"];
 var active = settings.startActive;
 var mouseDown = {};
+var testRunning = false;
 var doTray = true;
 // doTray = false;
 
@@ -245,22 +246,32 @@ function removeShortcuts() {
 }
 
 async function test() {
-  console.log("Testing!");
-  mouse = robot.getMousePos();
-  size = settings["test.size"];
-  amount = settings["test.amount"];
-  time = settings["test.time"] / 10 / amount;
-  for (i = 0; i < amount; i++) {
+  if (!testRunning) {
+    console.log("Testing!");
+    testRunning = true;
+    mouse = robot.getMousePos();
+    size = settings["test.size"];
+    amount = settings["test.amount"];
+    time = settings["test.time"] / 10 / amount;
+    for (i = 0; i < amount; i++) {
+      if (!active) {
+        return;
+      }
+      robot.moveMouse(
+        mouse.x - Math.sin((i / amount) * Math.PI * 2) * size,
+        mouse.y - Math.cos((i / amount) * Math.PI * 2) * size + size,
+      );
+      await sleep(time);
+    }
+    if (!active) {
+      return;
+    }
     robot.moveMouse(
-      mouse.x - Math.sin((i / amount) * Math.PI * 2) * size,
-      mouse.y - Math.cos((i / amount) * Math.PI * 2) * size + size,
+      mouse.x,
+      mouse.y,
     );
-    await sleep(time);
+    testRunning = false;
   }
-  robot.moveMouse(
-    mouse.x,
-    mouse.y,
-  );
 }
 function setSpeed() {
   speed = Math.round(Math.max(settings["speed.min"], Math.min(settings["speed.max"], speed)));
@@ -278,6 +289,7 @@ function toggleActive() {
     console.log("Activated");
   } else {
     removeShortcuts();
+    testRunning = false;
     if (mouseDown.left) {
       robot.mouseToggle("up", "left");
     }

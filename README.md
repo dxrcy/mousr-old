@@ -31,6 +31,7 @@ Issues, Bugs and Missing Features are very likely to occur, so please submit the
 Fixed
 </summary>
 
+- [x] Stop test mode being ran multiple times
 - [x] Press V for resetting speed
 - [x] Added smooth move toggle
 - [x] Change scroll keys (TFGH), Move Test key (PrintScreen)
