@@ -25,13 +25,13 @@ Issues, Bugs and Missing Features are very likely to occur, so please submit the
 # To Do
 
 - [ ] Fix icon for low resolution
-- [ ] Prevent multiple instances
 
 <details>
 <summary>
 Fixed
 </summary>
 
+- [x] Prevent multiple instances
 - [x] Add Ctrl + Alt + Insert to terminate program
 - [x] Stop test mode being ran multiple times
 - [x] Press V for resetting speed

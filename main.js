@@ -49,6 +49,10 @@ function createWindow() {
   console.log("Mousr Started");
 }
 
+if (!app.requestSingleInstanceLock()) {
+  console.log("Instance already open, Terminating self...\n");
+  process.exit();
+}
 app.allowRendererProcessReuse = false;
 app.whenReady().then(createWindow);
 
