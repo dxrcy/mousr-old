@@ -18,6 +18,7 @@ Issues, Bugs and Missing Features are very likely to occur, so please submit the
 - Use `X` and `C` to change cursor movement speed
 - Use `TFGH` to scroll (Up, Left, Down, Right)
 - Use `Alt + Insert` to activate / deactivate (You should see icon change in the taskbar tray)
+- Use `V` to toggle Smooth Mouse Movement
 
 # To Do
 

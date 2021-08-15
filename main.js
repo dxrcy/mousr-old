@@ -210,6 +210,11 @@ function setShortcuts() {
       test();
     }
   });
+  globalShortcut.register(shortcuts["smooth"], () => {
+    if (active) {
+      toggleSmooth();
+    }
+  });
 }
 
 function removeShortcuts() {
@@ -227,6 +232,7 @@ function removeShortcuts() {
   globalShortcut.unregister(shortcuts["scroll.down"]);
   globalShortcut.unregister(shortcuts["scroll.right"]);
   globalShortcut.unregister(shortcuts["test"]);
+  globalShortcut.unregister(shortcuts["smooth"]);
 }
 
 async function test() {
@@ -273,6 +279,10 @@ function toggleActive() {
     console.log("Dectivated");
   }
   tray.setContextMenu(Menu.buildFromTemplate(template));
+}
+function toggleSmooth() {
+  settings.smoothMove = !settings.smoothMove;
+  console.log("Smooth is set to " + (settings.smoothMove ? "TRUE" : "FALSE"));
 }
 
 function sleep(time) {
