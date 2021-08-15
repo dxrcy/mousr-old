@@ -6,6 +6,8 @@ Move mouse cursor with keyboard
 
 Powered by [RobotJS](https://github.com/octalmage/robotjs/)
 
+Issues, Bugs and Missing Features are very likely to occur, so please submit them [HERE](https://github.com/darccyy/mousr/issues/new/choose)
+
 # How to use
 
 - Download and Run latest release from [HERE](https://github.com/darccyy/mousr/releases/tag/v1.1.0)
