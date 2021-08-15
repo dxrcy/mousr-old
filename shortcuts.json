@@ -12,9 +12,9 @@
   "toggle.right": "Shift+E",
   "speed.decrease": "X",
   "speed.increase": "C",
-  "scroll.up": "R",
-  "scroll.left": "Shift+R",
-  "scroll.down": "F",
-  "scroll.right": "Shift+F",
-  "test": "T"
+  "scroll.up": "T",
+  "scroll.left": "F",
+  "scroll.down": "G",
+  "scroll.right": "H",
+  "test": "PrintScreen"
 }

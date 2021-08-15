@@ -1,5 +1,5 @@
 {
-  "smoothMove": true,
+  "smoothMove": false,
   "speed.default": 40,
   "speed.min": 2,
   "speed.max": 300,

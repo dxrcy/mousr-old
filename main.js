@@ -120,6 +120,8 @@ function setShortcuts() {
   });
   globalShortcut.register(shortcuts["click.left"], () => {
     if (active) {
+      robot.mouseToggle("up", "left");
+      mouseDown.left = false;
       robot.mouseClick("left");
       console.log("LEFT Clicked");
     }
@@ -139,6 +141,8 @@ function setShortcuts() {
   });
   globalShortcut.register(shortcuts["click.middle"], () => {
     if (active) {
+      robot.mouseToggle("up", "middle");
+      mouseDown.middle = false;
       robot.mouseClick("middle");
       console.log("MIDDLE Clicked");
     }
@@ -151,13 +155,15 @@ function setShortcuts() {
         console.log("MIDDLE Up");
       } else {
         robot.mouseToggle("down", "middle");
-        mouseDown.middle = true;X
+        mouseDown.middle = true;
         console.log("MIDDLE Down");
       }
     }
   });
   globalShortcut.register(shortcuts["click.right"], () => {
     if (active) {
+      robot.mouseToggle("up", "right");
+      mouseDown.right = false;
       robot.mouseClick("right");
       console.log("RIGHT Clicked");
     }
@@ -183,7 +189,7 @@ function setShortcuts() {
   });
   globalShortcut.register(shortcuts["scroll.left"], () => {
     if (active) {
-      robot.scrollMouse(true, speed * settings["speed.scroll"]);
+      robot.scrollMouse(speed * settings["speed.scroll"], 0);
       console.log(`Scrolled LEFT ${speed * settings["speed.scroll"]}`);
     }
   });
@@ -195,7 +201,7 @@ function setShortcuts() {
   });
   globalShortcut.register(shortcuts["scroll.right"], () => {
     if (active) {
-      robot.scrollMouse(true, - speed * settings["speed.scroll"]);
+      robot.scrollMouse(- speed * settings["speed.scroll"], 0);
       console.log(`Scrolled RIGHT ${speed * settings["speed.scroll"]}`);
     }
   });
@@ -253,6 +259,15 @@ function toggleActive() {
     console.log("Activated");
   } else {
     removeShortcuts();
+    if (mouseDown.left) {
+      robot.mouseToggle("up", "left");
+    }
+    if (mouseDown.middle) {
+      robot.mouseToggle("up", "middle");
+    }
+    if (mouseDown.right) {
+      robot.mouseToggle("up", "right");
+    }
     tray.setImage(path.join(__dirname, "image/icon.png"));
     template[0].label = labels[0];
     console.log("Dectivated");
