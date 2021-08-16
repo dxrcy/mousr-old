@@ -1,27 +1,31 @@
 {
   "activate": "Alt+Insert",
   "terminate": "Ctrl+Alt+Insert",
+  "test": "PrintScreen",
+
   "move.up": "W",
-  "move.left": "A",
   "move.down": "S",
+  "move.left": "A",
   "move.right": "D",
   "move.slow.up": "Shift+W",
-  "move.slow.left": "Shift+A",
   "move.slow.down": "Shift+S",
+  "move.slow.left": "Shift+A",
   "move.slow.right": "Shift+D",
+
   "click.left": "Q",
   "click.middle": "Z",
   "click.right": "E",
   "click.toggle.left": "Shift+Q",
   "click.toggle.middle": "Shift+Z",
   "click.toggle.right": "Shift+E",
+
+  "scroll.up": "T",
+  "scroll.down": "G",
+  "scroll.left": "F",
+  "scroll.right": "H",
+  
   "speed.decrease": "X",
   "speed.increase": "C",
   "speed.reset": "V",
-  "speed.smooth": "Shift+V",
-  "scroll.up": "T",
-  "scroll.left": "F",
-  "scroll.down": "G",
-  "scroll.right": "H",
-  "test": "PrintScreen"
+  "speed.smooth": "Shift+V"
 }

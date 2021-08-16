@@ -1,13 +1,13 @@
 {
-  "smoothMove": false,
+  "startActive": true,
+  "test.size": 40,
+  "test.amount": 20,
+  "test.time": 0,
   "speed.default": 40,
   "speed.min": 2,
   "speed.max": 300,
   "speed.change": 1.4,
-  "speed.scroll": 1,
+  "speed.scroll": 1.5,
   "speed.slow": 0.2,
-  "startActive": true,
-  "test.size": 40,
-  "test.amount": 20,
-  "test.time": 0
+  "smoothMove": false
 }

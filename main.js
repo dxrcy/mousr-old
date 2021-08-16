@@ -1,47 +1,36 @@
-const {app, BrowserWindow, ipcMain, Tray, Menu, globalShortcut, screen} = require("electron");
+/* Dependencies */
+const {app, Tray, Menu, globalShortcut} = require("electron");
 const fs = require("fs");
-const path = require("path");
 const robot = require("robotjs");
 
-var tray, isQuiting;
-app.on("before-quit", function () {
-  tray.destroy();
-  isQuiting = true;
-});
-var settings = JSON.parse(fs.readFileSync(path.join(__dirname, "settings.json")));
-var shortcuts = JSON.parse(fs.readFileSync(path.join(__dirname, "shortcuts.json")));
-var speed = settings["speed.default"];
-var active = settings.startActive;
+/* Global Variables */
+var tray;
 var mouseDown = {};
 var testRunning = false;
-var doTray = true;
-// doTray = false;
+var settings = JSON.parse(fs.readFileSync(__dirname + "/settings.json"));
+var shortcuts = JSON.parse(fs.readFileSync(__dirname + "/shortcuts.json"));
+var moveSpeed = settings["speed.default"];
+var active = settings.startActive;
 
+/* Tray Menu Template */
 labels = ["👍 Activate", "👎 Deativate"];
 template = [
   {
-    label: active ? labels[1] : labels[0], click: function () {
-      toggleActive();
-    }
+    label: labels[active ? 1 : 0],
+    click: toggleActive,
   },
   {
-    label: "❌ Quit", click: function () {
-      isQuiting = true;
-      app.quit();
-    }
+    label: "❌ Quit",
+    click: app.quit,
   }
 ];
 
-function createWindow() {
-  if (doTray) {
-    tray = new Tray(path.join(__dirname, active ? "image/icon-active.png" : "image/icon.png"));
-    tray.setContextMenu(Menu.buildFromTemplate(template));
-    tray.setToolTip("Mousr");
-  }
-
-  if (doTray) {
-    tray.on("click", toggleActive);
-  }
+/* Create Tray Icon */
+function createTray() {
+  tray = new Tray(__dirname + (active ? "/image/icon-active.png" : "/image/icon.png"));
+  tray.setContextMenu(Menu.buildFromTemplate(template));
+  tray.setToolTip("Mousr");
+  tray.on("click", toggleActive);
 
   globalShortcut.register(shortcuts["activate"], toggleActive);
   setShortcuts();
@@ -49,319 +38,322 @@ function createWindow() {
   console.log("Mousr Started");
 }
 
+/* Stop Multiple Instances */
 if (!app.requestSingleInstanceLock()) {
   console.log("Instance already open, Terminating self...\n");
   process.exit();
 }
-app.allowRendererProcessReuse = false;
-app.whenReady().then(createWindow);
 
+/* App Events */
+app.whenReady().then(createTray);
+app.on("activate", () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createTray();
+  }
+});
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
 });
-
-app.on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
+app.on("before-quit", function () {
+  tray.destroy();
 });
 
+/* Create Shortcuts */
+var groups = {
+  move: ["up", "down", "left", "right", "slow.up", "slow.down", "slow.left", "slow.right"],
+  click: ["left", "middle", "right", "toggle.left", "toggle.middle", "toggle.right"],
+  scroll: ["up", "down", "left", "right"],
+  speed: ["increase", "decrease", "reset", "smooth"],
+};
 function setShortcuts() {
-  globalShortcut.register(shortcuts["terminate"], () => {
-    if (active) {
-      app.quit();
-    }
-  });
-  globalShortcut.register(shortcuts["move.up"], () => {
-    if (active) {
-      var mouse = robot.getMousePos();
-      robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
-        mouse.x,
-        mouse.y - speed,
-      );
-      console.log(`Moved UP ${speed} pixels`);
-    }
-  });
-  globalShortcut.register(shortcuts["move.left"], () => {
-    if (active) {
-      var mouse = robot.getMousePos();
-      robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
-        mouse.x - speed,
-        mouse.y,
-      );
-      console.log(`Moved LEFT ${speed} pixels`);
-    }
-  });
-  globalShortcut.register(shortcuts["move.down"], () => {
-    if (active) {
-      var mouse = robot.getMousePos();
-      robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
-        mouse.x,
-        mouse.y + speed,
-      );
-      console.log(`Moved DOWN ${speed} pixels`);
-    }
-  });
-  globalShortcut.register(shortcuts["move.right"], () => {
-    if (active) {
-      var mouse = robot.getMousePos();
-      robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
-        mouse.x + speed,
-        mouse.y,
-      );
-      console.log(`Moved RIGHT ${speed} pixels`);
-    }
-  });
-  globalShortcut.register(shortcuts["move.slow.up"], () => {
-    if (active) {
-      var mouse = robot.getMousePos();
-      robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
-        mouse.x,
-        mouse.y - speed * settings["speed.slow"],
-      );
-      console.log(`Moved UP slowly ${speed * settings["speed.slow"]} pixels`);
-    }
-  });
-  globalShortcut.register(shortcuts["move.slow.left"], () => {
-    if (active) {
-      var mouse = robot.getMousePos();
-      robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
-        mouse.x - speed * settings["speed.slow"],
-        mouse.y,
-      );
-      console.log(`Moved LEFT slowly ${speed * settings["speed.slow"]} pixels`);
-    }
-  });
-  globalShortcut.register(shortcuts["move.slow.down"], () => {
-    if (active) {
-      var mouse = robot.getMousePos();
-      robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
-        mouse.x,
-        mouse.y + speed * settings["speed.slow"],
-      );
-      console.log(`Moved DOWN slowly ${speed * settings["speed.slow"]} pixels`);
-    }
-  });
-  globalShortcut.register(shortcuts["move.slow.right"], () => {
-    if (active) {
-      var mouse = robot.getMousePos();
-      robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
-        mouse.x + speed * settings["speed.slow"],
-        mouse.y,
-      );
-      console.log(`Moved RIGHT slowly ${speed * settings["speed.slow"]} pixels`);
-    }
-  });
-  globalShortcut.register(shortcuts["speed.increase"], () => {
-    if (active) {
-      speed *= settings["speed.change"];
-      setSpeed();
-      console.log(`Set speed to ${speed} pixels`);
-    }
-  });
-  globalShortcut.register(shortcuts["speed.decrease"], () => {
-    if (active) {
-      speed /= settings["speed.change"];
-      setSpeed();
-      console.log(`Set speed to ${speed} pixels`);
-    }
-  });
-  globalShortcut.register(shortcuts["speed.reset"], () => {
-    if (active) {
-      resetSpeed();
-    }
-  });
-  globalShortcut.register(shortcuts["speed.smooth"], () => {
-    if (active) {
-      toggleSmooth();
-    }
-  });
-  globalShortcut.register(shortcuts["click.left"], () => {
-    if (active) {
-      robot.mouseToggle("up", "left");
-      mouseDown.left = false;
-      robot.mouseClick("left");
-      console.log("LEFT Clicked");
-    }
-  });
-  globalShortcut.register(shortcuts["click.toggle.left"], () => {
-    if (active) {
-      if (mouseDown.left) {
-        robot.mouseToggle("up", "left");
-        mouseDown.left = false;
-        console.log("LEFT Up");
-      } else {
-        robot.mouseToggle("down", "left");
-        mouseDown.left = true;
-        console.log("LEFT Down");
-      }
-    }
-  });
-  globalShortcut.register(shortcuts["click.middle"], () => {
-    if (active) {
-      robot.mouseToggle("up", "middle");
-      mouseDown.middle = false;
-      robot.mouseClick("middle");
-      console.log("MIDDLE Clicked");
-    }
-  });
-  globalShortcut.register(shortcuts["click.toggle.middle"], () => {
-    if (active) {
-      if (mouseDown.middle) {
-        robot.mouseToggle("up", "middle");
-        mouseDown.middle = false;
-        console.log("MIDDLE Up");
-      } else {
-        robot.mouseToggle("down", "middle");
-        mouseDown.middle = true;
-        console.log("MIDDLE Down");
-      }
-    }
-  });
-  globalShortcut.register(shortcuts["click.right"], () => {
-    if (active) {
-      robot.mouseToggle("up", "right");
-      mouseDown.right = false;
-      robot.mouseClick("right");
-      console.log("RIGHT Clicked");
-    }
-  });
-  globalShortcut.register(shortcuts["click.toggle.right"], () => {
-    if (active) {
-      if (mouseDown.right) {
-        robot.mouseToggle("up", "right");
-        mouseDown.right = false;
-        console.log("RIGHT Up");
-      } else {
-        robot.mouseToggle("down", "right");
-        mouseDown.right = true;
-        console.log("RIGHT Down");
-      }
-    }
-  });
-  globalShortcut.register(shortcuts["scroll.up"], () => {
-    if (active) {
-      robot.scrollMouse(0, speed * settings["speed.scroll"]);
-      console.log(`Scrolled UP ${speed * settings["speed.scroll"]}`);
-    }
-  });
-  globalShortcut.register(shortcuts["scroll.left"], () => {
-    if (active) {
-      robot.scrollMouse(speed * settings["speed.scroll"], 0);
-      console.log(`Scrolled LEFT ${speed * settings["speed.scroll"]}`);
-    }
-  });
-  globalShortcut.register(shortcuts["scroll.down"], () => {
-    if (active) {
-      robot.scrollMouse(0, - speed * settings["speed.scroll"]);
-      console.log(`Scrolled DOWN ${speed * settings["speed.scroll"]}`);
-    }
-  });
-  globalShortcut.register(shortcuts["scroll.right"], () => {
-    if (active) {
-      robot.scrollMouse(- speed * settings["speed.scroll"], 0);
-      console.log(`Scrolled RIGHT ${speed * settings["speed.scroll"]}`);
-    }
-  });
-  globalShortcut.register(shortcuts["test"], () => {
-    if (active) {
-      test();
-    }
-  });
-}
+  globalShortcut.register(shortcuts["terminate"], app.quit);
+  globalShortcut.register(shortcuts["test"], actions.test);
 
-function removeShortcuts() {
-  globalShortcut.unregister(shortcuts["terminate"]);
-  globalShortcut.unregister(shortcuts["move.up"]);
-  globalShortcut.unregister(shortcuts["move.left"]);
-  globalShortcut.unregister(shortcuts["move.down"]);
-  globalShortcut.unregister(shortcuts["move.right"]);
-  globalShortcut.unregister(shortcuts["click.left"]);
-  globalShortcut.unregister(shortcuts["click.toggle.left"]);
-  globalShortcut.unregister(shortcuts["click.middle"]);
-  globalShortcut.unregister(shortcuts["click.toggle.middle"]);
-  globalShortcut.unregister(shortcuts["click.right"]);
-  globalShortcut.unregister(shortcuts["click.toggle.right"]);
-  globalShortcut.unregister(shortcuts["speed.decrease"]);
-  globalShortcut.unregister(shortcuts["speed.increase"]);
-  globalShortcut.unregister(shortcuts["speed.reset"]);
-  globalShortcut.unregister(shortcuts["speed.smooth"]);
-  globalShortcut.unregister(shortcuts["scroll.up"]);
-  globalShortcut.unregister(shortcuts["scroll.left"]);
-  globalShortcut.unregister(shortcuts["scroll.down"]);
-  globalShortcut.unregister(shortcuts["scroll.right"]);
-  globalShortcut.unregister(shortcuts["test"]);
-}
-
-async function test() {
-  if (!testRunning) {
-    console.log("Testing!");
-    testRunning = true;
-    mouse = robot.getMousePos();
-    size = settings["test.size"];
-    amount = settings["test.amount"];
-    time = settings["test.time"] / 10 / amount;
-    for (i = 0; i < amount; i++) {
-      if (!active) {
-        return;
-      }
-      robot.moveMouse(
-        mouse.x - Math.sin((i / amount) * Math.PI * 2) * size,
-        mouse.y - Math.cos((i / amount) * Math.PI * 2) * size + size,
-      );
-      await sleep(time);
+  for (i in groups) {
+    for (j in groups[i]) {
+      globalShortcut.register(shortcuts[i + "." + groups[i][j]], actions[i][groups[i][j]]);
     }
-    if (!active) {
-      return;
-    }
-    robot.moveMouse(
-      mouse.x,
-      mouse.y,
-    );
-    testRunning = false;
   }
 }
-function setSpeed() {
-  speed = Math.round(Math.max(settings["speed.min"], Math.min(settings["speed.max"], speed)));
+
+/* Remove Shortcuts */
+function removeShortcuts() {
+  for (i in shortcuts) {
+    if (i !== "activate") {
+      globalShortcut.unregister(shortcuts[i]);
+    }
+  }
 }
-function resetSpeed() {
-  speed = settings["speed.default"];
-  console.log("Speed RESET");
-}
+
+/* Toggle Active State */
 function toggleActive() {
   active = !active;
   if (active) {
     setShortcuts();
-    tray.setImage(path.join(__dirname, "image/icon-active.png"));
+    tray.setImage(__dirname + "/image/icon-active.png");
     template[0].label = labels[1];
     console.log("Activated");
   } else {
     removeShortcuts();
     testRunning = false;
-    if (mouseDown.left) {
-      robot.mouseToggle("up", "left");
-    }
-    if (mouseDown.middle) {
-      robot.mouseToggle("up", "middle");
-    }
-    if (mouseDown.right) {
-      robot.mouseToggle("up", "right");
-    }
-    tray.setImage(path.join(__dirname, "image/icon.png"));
+    if (mouseDown.left) {robot.mouseToggle("up", "left")}
+    if (mouseDown.middle) {robot.mouseToggle("up", "middle")}
+    if (mouseDown.right) {robot.mouseToggle("up", "right")}
+    tray.setImage(__dirname + "/image/icon.png");
     template[0].label = labels[0];
     console.log("Dectivated");
   }
   tray.setContextMenu(Menu.buildFromTemplate(template));
 }
-function toggleSmooth() {
-  settings.smoothMove = !settings.smoothMove;
-  console.log("Smooth is set to " + (settings.smoothMove ? "TRUE" : "FALSE"));
-}
 
-function sleep(time) {
-  return new Promise(resolve => {
-    setTimeout(resolve, time * 1000);
-  });
+/* Lots of Functions */
+var actions = {
+  /* Cursor Movement */
+  move: {
+    up: function () {
+      if (active) {
+        mouse = robot.getMousePos();
+        robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
+          mouse.x,
+          mouse.y - moveSpeed,
+        );
+        console.log(`Moved UP ${moveSpeed} px`);
+      }
+    },
+    down: function () {
+      if (active) {
+        mouse = robot.getMousePos();
+        robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
+          mouse.x,
+          mouse.y + moveSpeed,
+        );
+        console.log(`Moved DOWN ${moveSpeed} px`);
+      }
+    },
+    left: function () {
+      if (active) {
+        mouse = robot.getMousePos();
+        robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
+          mouse.x - moveSpeed,
+          mouse.y,
+        );
+        console.log(`Moved LEFT ${moveSpeed} px`);
+      }
+    },
+    right: function () {
+      if (active) {
+        mouse = robot.getMousePos();
+        robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
+          mouse.x + moveSpeed,
+          mouse.y,
+        );
+        console.log(`Moved RIGHT ${moveSpeed} px`);
+      }
+    },
+    "slow.up": function () {
+      if (active) {
+        mouse = robot.getMousePos();
+        robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
+          mouse.x,
+          mouse.y - moveSpeed * settings["speed.slow"],
+        );
+        console.log(`Moved UP slowly ${moveSpeed * settings["speed.slow"]} px`);
+      }
+    },
+    "slow.down": function () {
+      if (active) {
+        mouse = robot.getMousePos();
+        robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
+          mouse.x,
+          mouse.y + moveSpeed * settings["speed.slow"],
+        );
+        console.log(`Moved DOWN slowly ${moveSpeed * settings["speed.slow"]} px`);
+      }
+    },
+    "slow.left": function () {
+      if (active) {
+        mouse = robot.getMousePos();
+        robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
+          mouse.x - moveSpeed * settings["speed.slow"],
+          mouse.y,
+        );
+        console.log(`Moved LEFT slowly ${moveSpeed * settings["speed.slow"]} px`);
+      }
+    },
+    "slow.right": function () {
+      if (active) {
+        mouse = robot.getMousePos();
+        robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
+          mouse.x + moveSpeed * settings["speed.slow"],
+          mouse.y,
+        );
+        console.log(`Moved RIGHT slowly ${moveSpeed * settings["speed.slow"]} px`);
+      }
+    },
+  },
+
+  /* Mouse Clicks */
+  click: {
+    left: function () {
+      if (active) {
+        if (mouseDown.left) {
+          robot.mouseToggle("up", "left");
+        }
+        mouseDown.left = false;
+        robot.mouseClick("left");
+        console.log("LEFT Clicked");
+      }
+    },
+    middle: function () {
+      if (active) {
+        if (mouseDown.middle) {
+          robot.mouseToggle("up", "middle");
+        }
+        mouseDown.middle = false;
+        robot.mouseClick("middle");
+        console.log("MIDDLE Clicked");
+      }
+    },
+    right: function () {
+      if (active) {
+        if (mouseDown.right) {
+          robot.mouseToggle("up", "right");
+        }
+        mouseDown.right = false;
+        robot.mouseClick("right");
+        console.log("RIGHT Clicked");
+      }
+    },
+    "toggle.left": function () {
+      if (active) {
+        if (mouseDown.left) {
+          robot.mouseToggle("up", "left");
+          mouseDown.left = false;
+          console.log("LEFT Up");
+        } else {
+          robot.mouseToggle("down", "left");
+          mouseDown.left = true;
+          console.log("LEFT Down");
+        }
+      }
+    },
+    "toggle.middle": function () {
+      if (active) {
+        if (mouseDown.middle) {
+          robot.mouseToggle("up", "middle");
+          mouseDown.middle = false;
+          console.log("MIDDLE Up");
+        } else {
+          robot.mouseToggle("down", "middle");
+          mouseDown.middle = true;
+          console.log("MIDDLE Down");
+        }
+      }
+    },
+    "toggle.right": function () {
+      if (active) {
+        if (mouseDown.right) {
+          robot.mouseToggle("up", "right");
+          mouseDown.right = false;
+          console.log("RIGHT Up");
+        } else {
+          robot.mouseToggle("down", "right");
+          mouseDown.right = true;
+          console.log("RIGHT Down");
+        }
+      }
+    },
+  },
+
+  /* Mouse Scrolls */
+  scroll: {
+    up: function () {
+      if (active) {
+        robot.scrollMouse(0, moveSpeed * settings["speed.scroll"]);
+        console.log(`Scrolled UP ${moveSpeed * settings["speed.scroll"]}`);
+      }
+    },
+    down: function () {
+      if (active) {
+        robot.scrollMouse(0, - moveSpeed * settings["speed.scroll"]);
+        console.log(`Scrolled DOWN ${moveSpeed * settings["speed.scroll"]}`);
+      }
+    },
+    left: function () {
+      if (active) {
+        robot.scrollMouse(moveSpeed * settings["speed.scroll"], 0);
+        console.log(`Scrolled LEFT ${moveSpeed * settings["speed.scroll"]}`);
+      }
+    },
+    right: function () {
+      if (active) {
+        robot.scrollMouse(- moveSpeed * settings["speed.scroll"], 0);
+        console.log(`Scrolled RIGHT ${moveSpeed * settings["speed.scroll"]}`);
+      }
+    },
+  },
+
+  /* Speed Change */
+  speed: {
+    increase: function () {
+      if (active) {
+        moveSpeed *= settings["speed.change"];
+        actions.speed.check();
+        console.log(`Set speed to ${moveSpeed} px/c`);
+      }
+    },
+    decrease: function () {
+      if (active) {
+        moveSpeed /= settings["speed.change"];
+        actions.speed.check();
+        console.log(`Set speed to ${moveSpeed} px/c`);
+      }
+    },
+    reset: function () {
+      if (active) {
+        moveSpeed = settings["speed.default"];
+        console.log(`Speed RESET to ${moveSpeed} px/c`);
+      }
+    },
+    smooth: function () {
+      if (active) {
+        settings.smoothMove = !settings.smoothMove;
+        console.log("Smooth is set to " + (settings.smoothMove ? "TRUE" : "FALSE"));
+      }
+    },
+    check: function () {
+      moveSpeed = Math.round(Math.max(settings["speed.min"], Math.min(settings["speed.max"], moveSpeed)));
+    }
+  },
+
+  /* Spin Cursor in Circle */
+  test: async function () {
+    if (active && !testRunning) {
+      testRunning = true;
+      console.log("Testing!");
+      mouse = robot.getMousePos();
+      size = settings["test.size"];
+      amount = settings["test.amount"];
+      time = settings["test.time"] / 10 / amount;
+      for (i = 0; i < amount; i++) {
+        robot.moveMouse(
+          mouse.x - Math.sin((i / amount) * Math.PI * 2) * size,
+          mouse.y - Math.cos((i / amount) * Math.PI * 2) * size + size,
+        );
+        await new Promise(resolve => {
+          setTimeout(resolve, time * 1000);
+        });
+        if (!active) {
+          return;
+        }
+      }
+      robot.moveMouse(
+        mouse.x,
+        mouse.y,
+      );
+      testRunning = false;
+    }
+  },
 }
