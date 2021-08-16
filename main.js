@@ -21,7 +21,7 @@ template = [
   },
   {
     label: "❌ Quit",
-    click: app.quit,
+    click: quit,
   }
 ];
 
@@ -53,7 +53,7 @@ app.on("activate", () => {
 });
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
-    app.quit();
+    quit();
   }
 });
 app.on("before-quit", function () {
@@ -68,7 +68,7 @@ var groups = {
   speed: ["increase", "decrease", "reset", "smooth"],
 };
 function setShortcuts() {
-  globalShortcut.register(shortcuts["terminate"], app.quit);
+  globalShortcut.register(shortcuts["terminate"], quit);
   globalShortcut.register(shortcuts["test"], actions.test);
 
   for (i in groups) {
@@ -106,6 +106,13 @@ function toggleActive() {
     console.log("Dectivated");
   }
   tray.setContextMenu(Menu.buildFromTemplate(template));
+}
+
+/* Quit program safely */
+function quit() {
+  console.log("Quitting...");
+  app.quit();
+  process.exit(0);
 }
 
 /* Lots of Functions */
@@ -155,41 +162,45 @@ var actions = {
     "slow.up": function () {
       if (active) {
         mouse = robot.getMousePos();
+        speed = Math.max(1, moveSpeed * settings["speed.slow"]);
         robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
           mouse.x,
-          mouse.y - moveSpeed * settings["speed.slow"],
+          mouse.y - speed,
         );
-        console.log(`Moved UP slowly ${moveSpeed * settings["speed.slow"]} px`);
+        console.log(`Moved UP slowly ${speed} px`);
       }
     },
     "slow.down": function () {
       if (active) {
         mouse = robot.getMousePos();
+        speed = Math.max(1, moveSpeed * settings["speed.slow"]);
         robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
           mouse.x,
-          mouse.y + moveSpeed * settings["speed.slow"],
+          mouse.y + speed,
         );
-        console.log(`Moved DOWN slowly ${moveSpeed * settings["speed.slow"]} px`);
+        console.log(`Moved DOWN slowly ${speed} px`);
       }
     },
     "slow.left": function () {
       if (active) {
         mouse = robot.getMousePos();
+        speed = Math.max(1, moveSpeed * settings["speed.slow"]);
         robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
-          mouse.x - moveSpeed * settings["speed.slow"],
+          mouse.x - speed,
           mouse.y,
         );
-        console.log(`Moved LEFT slowly ${moveSpeed * settings["speed.slow"]} px`);
+        console.log(`Moved LEFT slowly ${speed} px`);
       }
     },
     "slow.right": function () {
       if (active) {
         mouse = robot.getMousePos();
+        speed = Math.max(1, moveSpeed * settings["speed.slow"]);
         robot["moveMouse" + (settings.smoothMove ? "Smooth" : "")](
-          mouse.x + moveSpeed * settings["speed.slow"],
+          mouse.x + speed,
           mouse.y,
         );
-        console.log(`Moved RIGHT slowly ${moveSpeed * settings["speed.slow"]} px`);
+        console.log(`Moved RIGHT slowly ${speed} px`);
       }
     },
   },
@@ -339,7 +350,7 @@ var actions = {
       time = settings["test.time"] / 10 / amount;
       for (i = 0; i < amount; i++) {
         robot.moveMouse(
-          mouse.x - Math.sin((i / amount) * Math.PI * 2) * size,
+          mouse.x + Math.sin((i / amount) * Math.PI * 2) * size,
           mouse.y - Math.cos((i / amount) * Math.PI * 2) * size + size,
         );
         await new Promise(resolve => {
