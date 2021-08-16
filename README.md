@@ -12,7 +12,7 @@ Pronounced `/ˈmaʊsɜ˞̆ɹ̩/`
 
 ## Installation
 
-1. Download the [latest release](https://github.com/darccyy/mousr/releases/tag/v1.2.2)
+1. Download the [latest release](https://github.com/darccyy/mousr/releases/tag/v1.2.3)
 
 - - Or: Download [previous versions](https://github.com/darccyy/mousr/releases)
 
