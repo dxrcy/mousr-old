@@ -25,7 +25,7 @@ Pronounced `/ˈmaʊsɜ˞̆ɹ̩/`
 
 ## Controls
 
-- Use `PrintScreen` to test if program is working (Cursor should spin in circle) but DO NOT HOLD IT DOWN! Unless you want lag and cringe :)
+- Use `PrintScreen` to test if program is working (Cursor should spin in circle)
 - Use `WASD` to move cursor (Up, Left, Down, Right)
 - - Hold `Shift` while using these to go slower (Relative to set speed)
 - Use `Q`, `E`, and `Z` to Left, Middle, and Right click respectively
