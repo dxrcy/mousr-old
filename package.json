@@ -1,7 +1,7 @@
 {
   "name": "mousr",
   "productName": "Mousr",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Move mouse cursor with keyboard",
   "main": "main.js",
   "scripts": {
