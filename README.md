@@ -12,7 +12,7 @@ Issues, Bugs and Missing Features are very likely to occur, so please submit the
 
 ## Installation
 
-- Download the latest release from [HERE](https://github.com/darccyy/mousr/releases/tag/v1.1.0)
+- Download the latest release from [HERE](https://github.com/darccyy/mousr/releases/tag/v1.2.2)
 - Run the executable file
 - Press 'More info' and then 'Run anyway'
 - Wait for it to install
