@@ -1,21 +1,25 @@
 # Mousr
 
-`/ˈmaʊsɜ˞̆ɹ̩/`
-
 Move mouse cursor with keyboard
 
-Powered by [RobotJS](https://github.com/octalmage/robotjs/)
-
 Issues, Bugs and Missing Features are very likely to occur, so please submit them [HERE](https://github.com/darccyy/mousr/issues/new/choose)
+
+Pronounced `/ˈmaʊsɜ˞̆ɹ̩/`
+
+> Powered by [RobotJS](https://github.com/octalmage/robotjs/)
 
 # How to use
 
 ## Installation
 
-- Download the latest release from [HERE](https://github.com/darccyy/mousr/releases/tag/v1.2.2)
-- Run the executable file
-- Press 'More info' and then 'Run anyway'
-- Wait for it to install
+1. Download the [latest release](https://github.com/darccyy/mousr/releases/tag/v1.2.2)
+
+- - Or: Download [previous versions](https://github.com/darccyy/mousr/releases)
+
+2. Run the executable file
+3. Press 'More info' and then 'Run anyway'
+4. Wait for it to install
+
 - It should open automatically
 - To open anytime, just search 'Mousr' in search bar, or click shortcut icon
 
